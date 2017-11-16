@@ -1,28 +1,34 @@
-var input;
 var img;
 var bg;
+var input;
+var button;
 
 function setup() {
   var c = createCanvas(612, 792);
   background('pink');
   bg = loadImage('images/template.png');
-  // uploadImg = loadImage('images/bauhaus.png');
-  input = createFileInput(handleFile);
+  c.drop(gotFile);
+  input = createFileInput(gotFile);
   input.position(35, 35);
+  button = createButton('save');
+  button.position(35, 55);
+  button.mousePressed(saveCanvas);
 }
 
 function draw() {
-  // image(uploadImg, 189, 71, 360, 360);
-  // image(img, 0, 0, 613, 794);
-  // image(bg, 0, 0, width, height);
+  if (img) {
+    image(img, 189, 71, 360, 360);
+  } else {
+    text('Drag an image file onto the canvas.', width>>1, height>>1);
+  }
+  image(bg, 0, 0, 613, 794);
   rect(mouseX, mouseY, 1, 1);
 }
 
-function handleFile(file) {
-  print(file);
-  if (file.type == 'image') {
-    img = createImg(file.data).addClass('lit');
-    img.hide();
-    image(img, 0, 0, width, height);
+function gotFile(f) {
+  if (f.type === 'image') {
+    img = loadImage(f.data, redraw);
+  } else {
+    print(`"${f.name}" isn't an image file!`);
   }
 }
